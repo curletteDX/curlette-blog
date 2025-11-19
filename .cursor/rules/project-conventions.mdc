@@ -1,0 +1,935 @@
+---
+description: Project-specific conventions and rules for the Uniform Next.js Starter
+globs:
+alwaysApply: true
+---
+
+# Project-Specific Conventions
+
+## Project Overview
+
+This is a **Uniform Next.js Starter** project using:
+- **Next.js 15** with Pages Router (NOT App Router)
+- **React 19** with TypeScript
+- **Uniform CMS** for visual content editing
+- **Tailwind CSS v4** for styling
+- **Radix UI** for accessible UI primitives
+- **npm** as the package manager
+
+## Core Technologies & Versions
+
+### Package Manager
+- **ALWAYS use `npm`** for installing packages (never yarn or pnpm)
+- Lock file: `package-lock.json` (never modify manually)
+
+### Next.js Configuration
+- **Port**: Application runs on port **3222** (configured in package.json scripts)
+- **Router**: Pages Router (in `src/pages/` directory)
+- **Turbopack**: Enabled in development mode
+- **i18n**: 92+ locales configured (default: `en-US`)
+- **Image Optimization**: Remote patterns allow all HTTPS hosts (`https://**`)
+
+### TypeScript Configuration
+- **Path Aliases** are configured in `tsconfig.json`:
+  - `@/*` → `./src/*`
+  - `@/components` → `./src/components`
+  - `@/hooks` → `./src/hooks`
+  - `@/lib` → `./src/lib`
+  - `@/uniformContext` → `./src/uniformContext`
+  - `@/styles` → `./src/styles`
+  - `@/components/ui` → `./src/components/ui`
+- **ALWAYS use these path aliases** instead of relative imports
+
+## Component Architecture
+
+### Component Structure & Organization
+
+Components are organized by function in `src/components/`:
+
+```
+src/components/
+├── article/          # Article-specific components
+├── cards/            # Card layouts and grid components
+├── content/          # Text, rich text, CTA components
+├── form/             # Form components and field types
+├── layout/           # Header, footer, container components
+├── media/            # Image, video, and media components
+├── page/             # Page composition components
+├── playground/       # Component testing sandbox
+├── ui/               # Interactive UI components (accordion, tabs, carousel)
+└── index.ts          # Central export file
+```
+
+### Component File Conventions
+
+1. **File naming**: PascalCase matching component name (e.g., `CardGrid.tsx`)
+2. **Export pattern**: Named export + default export + type export
+3. **Location**: Organized by function/category in subdirectories
+4. **Index file**: All components exported through `src/components/index.ts`
+
+### Component Lifecycle - Creating New Components
+
+**CRITICAL**: When creating a new component, you MUST complete ALL of these steps:
+
+1. **Create the component file** in the appropriate subdirectory
+   - Use PascalCase naming matching the component name
+   - Follow the component structure template
+   - Include comprehensive JSDoc documentation
+   - Register with Uniform using `registerUniformComponent`
+
+2. **Update `src/components/index.ts`** - Add export statement
+   - Place in the appropriate category section
+   - Export both default component and Props type
+   - Follow the existing pattern:
+   ```typescript
+   // For single exports
+   export { default as ComponentName, type ComponentNameProps } from './category/ComponentName';
+   
+   // For components with sub-components (like Accordion/AccordionItem)
+   export { ComponentName, SubComponent, type ComponentNameProps, type SubComponentProps } from './category/ComponentName';
+   ```
+   - Categories: LAYOUT, CONTENT, ARTICLE, CARD, MEDIA, INTERACTIVE, FORM, PAGE
+   - Maintain alphabetical order within each category
+
+3. **Create/Update Uniform component definition** via MCP tools
+   - Define parameters (text, richText, asset, link, etc.)
+   - Define slots if the component contains child components
+   - Set slot configurations (allowedComponents, min/max)
+   - Add component description and guidance
+
+4. **Create component pattern** in Uniform (if applicable)
+   - Populate with realistic example content
+   - Make parameters overridable by default
+   - Use previous examples of the component if available
+
+5. **Run `npm run uniform:pull`** to sync Uniform changes to local files
+
+6. **Test the component**
+   - Check in Uniform Canvas editor
+   - Test in `/uniform-playground` if needed
+   - Verify responsive behavior
+   - Check for linter errors with `npm run lint`
+
+**Example: Adding a new "Testimonial" component**
+
+```typescript
+// 1. Create src/components/content/Testimonial.tsx
+export const Testimonial: React.FC<TestimonialProps> = ({ ... }) => { ... }
+export default Testimonial;
+
+// 2. Update src/components/index.ts
+// === CONTENT COMPONENTS ===
+export { default as ContentHero, type ContentHeroProps } from './content/ContentHero';
+export { default as CTA, type CTAProps } from './content/CTA';
+export { default as RichText, type RichTextProps } from './content/RichText';
+export { default as Section, type SectionProps } from './content/Section';
+export { default as Testimonial, type TestimonialProps } from './content/Testimonial'; // NEW
+export { default as Text, type TextProps } from './content/Text';
+
+// 3. Use Uniform MCP tool to create component definition
+// 4. Use Uniform MCP tool to create component pattern
+// 5. Run: npm run uniform:pull
+// 6. Test in Canvas and playground
+```
+
+### Component Lifecycle - Deleting Components
+
+**CRITICAL**: When deleting a component, you MUST:
+
+1. **Remove from `src/components/index.ts`** - Delete the export statement
+2. **Delete via Uniform MCP tools** - Remove component definition and any patterns
+3. **Run `npm run uniform:pull`** to sync changes
+4. **Delete the component file(s)** from the file system
+5. **Search for usage** - Ensure no other code references the deleted component
+
+### Component Structure Template
+
+Every Uniform component should follow this pattern:
+
+```typescript
+import React from "react";
+import {
+  UniformText,
+  UniformRichText,
+  UniformSlot,
+  registerUniformComponent,
+} from "@uniformdev/canvas-react";
+import { cn } from "@/lib/utils";
+
+export interface ComponentNameProps {
+  className?: string;
+  // ... other props
+}
+
+/**
+ * Component Name - Brief Description
+ * 
+ * Detailed explanation of component purpose, features, and use cases.
+ * 
+ * Features:
+ * - Feature 1
+ * - Feature 2
+ * 
+ * Use Cases:
+ * - Use case 1
+ * - Use case 2
+ */
+export const ComponentName: React.FC<ComponentNameProps> = ({
+  className = "",
+  // ... other props
+}) => {
+  return (
+    <section className={cn("py-16 px-6", className)}>
+      {/* Component implementation */}
+    </section>
+  );
+};
+
+// UNIFORM REGISTRATION
+registerUniformComponent({
+  type: "componentName", // camelCase, matches Uniform public ID
+  component: ComponentName,
+});
+
+export default ComponentName;
+```
+
+### Component Documentation Standards
+
+**EVERY component must include:**
+1. **JSDoc comment block** explaining:
+   - Purpose and description
+   - Key features (bulleted list)
+   - Use cases or when to use it
+   - Responsive behavior
+   - Any special considerations
+2. **Inline comments** for:
+   - Complex logic
+   - Uniform-specific features (UniformSlot, UniformText usage)
+   - Responsive breakpoints
+   - Important className decisions
+
+## Uniform Integration Patterns
+
+### Component Registration
+
+1. **Always register components** with `registerUniformComponent`:
+```typescript
+registerUniformComponent({
+  type: "componentName", // Must match Uniform public ID (camelCase)
+  component: ComponentName,
+});
+```
+
+2. **Component types** (public IDs) use camelCase (e.g., `cardGrid`, `imageHero`, `contentHero`)
+
+### Uniform Parameter Types
+
+Use appropriate Uniform components for editable content:
+
+- **Text**: `<UniformText parameterId="fieldName" placeholder="..." as="span" />`
+- **Rich Text**: `<UniformRichText parameterId="content" placeholder="..." />`
+- **Slots**: `<UniformSlot name="slotName" />` for child components
+- **Assets (Images/Files)**: See detailed section below
+- **Links**: Use `componentParams` with type `link` in Uniform definitions
+
+### Asset Parameters and Focal Points
+
+This project includes sophisticated asset handling with multi-CDN support and focal point positioning. Assets are always received as arrays from Uniform.
+
+#### Asset Type Definition
+
+```typescript
+import type { AssetParamValue } from "@uniformdev/assets";
+
+export interface ComponentProps {
+  image?: AssetParamValue; // Array of asset objects
+  backgroundImage?: AssetParamValue;
+  // ... other props
+}
+```
+
+#### Basic Asset Processing Pattern
+
+```typescript
+// 1. Extract the asset from the array
+const imageAssets = image ?? [];
+const [firstAsset] = imageAssets;
+
+// 2. Get transformed URL with options
+const imageUrl = getTransformedImageUrl(firstAsset, {
+  width: 800,
+  height: 600,
+  fit: "cover",
+  focal: focalPoint || "center",
+  quality: 85,
+});
+
+// 3. Extract alt text for accessibility
+const imageAlt = firstAsset?.fields?.description?.value || 
+                firstAsset?.fields?.title?.value || 
+                'Image';
+```
+
+#### Focal Point Handling
+
+Focal points allow precise control over which part of an image is displayed when cropped.
+
+**Extracting focal point from asset:**
+```typescript
+const focalPoint = firstAsset?.fields?.focalPoint?.value;
+// Returns: { x: 0.5, y: 0.5 } or undefined
+// Coordinates are 0-1 where (0,0) is top-left, (1,1) is bottom-right
+```
+
+**Using focal points in transformations:**
+```typescript
+// Option 1: Use in getTransformedImageUrl (recommended)
+const imageUrl = getTransformedImageUrl(firstAsset, {
+  width: 1200,
+  height: 600,
+  fit: "cover",
+  focal: focalPoint || "center", // Uses focal point or centers
+  quality: 85,
+});
+
+// Option 2: Use with imageFrom directly
+const imageUrl = firstAsset
+  ? imageFrom(firstAsset)
+      .transform({ 
+        width: 1200,
+        height: 600,
+        fit: "cover",
+        focal: focalPoint || "center"
+      })
+      .url()
+  : undefined;
+```
+
+**Using focal points for CSS backgrounds:**
+```typescript
+const backgroundPosition = focalPoint
+  ? `${focalPoint.x * 100}% ${focalPoint.y * 100}%`
+  : 'center';
+
+<div style={{
+  backgroundImage: `url('${imageUrl}')`,
+  backgroundPosition,
+  backgroundSize: 'cover',
+}} />
+```
+
+#### Image Transformation Options
+
+The `getTransformedImageUrl` utility supports multiple CDNs with consistent API:
+
+**Available options:**
+```typescript
+interface TransformOptions {
+  width: number;              // Required: target width in pixels
+  height?: number;            // Optional: target height in pixels
+  fit?: "cover" | "contain" | "scale-down"; // Resize mode
+  focal?: { x: number; y: number } | "center" | "auto"; // Focal point
+  quality?: number;           // 1-100, default varies by CDN
+  dpr?: number;              // Device pixel ratio (1, 2, etc.)
+}
+```
+
+**Fit modes:**
+- `"cover"` - Crop to fill dimensions (maintains aspect ratio)
+- `"contain"` - Fit inside dimensions (maintains aspect ratio, may letterbox)
+- `"scale-down"` - Scale down to fit width (maintains aspect ratio)
+
+**Focal point options:**
+- `{ x: 0.5, y: 0.5 }` - Custom coordinates (0-1 range)
+- `"center"` - Center the image
+- `"auto"` - Auto-detect focal point (faces, entropy)
+
+#### Multi-CDN Support
+
+The `getTransformedImageUrl` utility automatically detects and handles:
+
+1. **Uniform Assets** (`*.uniform.global`)
+   - Uses native `imageFrom()` API
+   - Supports all focal point options
+   - Optimal for Uniform-hosted images
+
+2. **Cloudinary** (`res.cloudinary.com`)
+   - Full transformation API support
+   - Focal points converted to gravity + pixel coordinates
+   - Requires original image dimensions for accurate focal positioning
+   - Falls back to `g_auto` if dimensions unavailable
+
+3. **Unsplash** (`images.unsplash.com`)
+   - Uses Imgix transformation parameters
+   - Focal points mapped to `crop=focalpoint` with `fp-x`/`fp-y`
+   - Auto-format for WebP/AVIF support
+
+#### Complete Component Example
+
+```typescript
+import React from "react";
+import { UniformText, registerUniformComponent } from "@uniformdev/canvas-react";
+import NextImage from "next/image";
+import type { AssetParamValue } from "@uniformdev/assets";
+import { getTransformedImageUrl } from "@/utilities/imageTransform";
+
+export interface ImageComponentProps {
+  className?: string;
+  image?: AssetParamValue;
+}
+
+export const ImageComponent: React.FC<ImageComponentProps> = ({
+  className = "",
+  image,
+}) => {
+  // Extract asset from array
+  const imageAssets = image ?? [];
+  const [firstAsset] = imageAssets;
+  
+  // Get focal point from asset
+  const focalPoint = firstAsset?.fields?.focalPoint?.value;
+  
+  // Transform image with focal point
+  const imageUrl = getTransformedImageUrl(firstAsset, {
+    width: 800,
+    height: 600,
+    fit: "cover",
+    focal: focalPoint || "center",
+    quality: 85,
+  });
+
+  // Extract alt text for accessibility
+  const imageAlt = firstAsset?.fields?.description?.value || 
+                  firstAsset?.fields?.title?.value || 
+                  'Image';
+
+  return (
+    <section className={`py-12 px-6 ${className}`}>
+      {imageUrl ? (
+        <div className="relative aspect-[4/3] overflow-hidden rounded-lg">
+          <NextImage
+            src={imageUrl}
+            alt={imageAlt}
+            fill
+            className="object-cover"
+            sizes="(max-width: 768px) 100vw, 800px"
+          />
+        </div>
+      ) : (
+        <div className="aspect-[4/3] bg-gray-100 rounded-lg flex items-center justify-center">
+          <p className="text-gray-500">Select an image in the panel →</p>
+        </div>
+      )}
+    </section>
+  );
+};
+
+registerUniformComponent({
+  type: "imageComponent",
+  component: ImageComponent,
+});
+
+export default ImageComponent;
+```
+
+#### Best Practices for Assets
+
+1. **Always provide fallback placeholders** when no image is selected
+2. **Extract alt text** from asset metadata for accessibility
+3. **Use appropriate dimensions** for the use case:
+   - Hero images: 1920x1080 or larger
+   - Card images: 400x300
+   - Thumbnails: 200x200
+   - Full-width: 1200x600
+4. **Use focal points** for critical images where composition matters
+5. **Set proper quality** (85 is a good default, 90+ for photography)
+6. **Use responsive sizes** attribute for Next.js Image optimization
+7. **Consider fit mode**:
+   - Use `"cover"` for backgrounds and cards
+   - Use `"contain"` when full image must be visible
+   - Use `"scale-down"` for flexible width-only scaling
+8. **Log transformations** during development to verify URLs are correct
+
+#### Uniform Component Definition Example
+
+When creating asset parameters in Uniform via MCP:
+
+```typescript
+{
+  name: "Featured Image",
+  id: "featuredImage",
+  type: "asset",
+  localizable: false,
+  required: false,
+  guidance: "Select a high-resolution image (recommended: 1200x600px minimum)",
+  typeConfig: {
+    allowedTypes: ["image"] // Can also include: "video", "audio", "other"
+  }
+}
+```
+
+### Slot Naming Conventions
+
+Common slot names used in this project:
+- `content` - Main content area
+- `header` - Header area  
+- `body` - Body content
+- `footer` - Footer area
+- `items` - Repeating items (accordion items, carousel slides)
+- `cards` - Card components in grids
+- `tabs` - Tab panels
+
+## Styling Conventions
+
+### Tailwind CSS v4 Patterns
+
+1. **Use Tailwind v4** (imported from `@import "tailwindcss"`)
+2. **Utility-first approach** - prefer Tailwind classes over custom CSS
+3. **Responsive design** - mobile-first breakpoints:
+   - Default: mobile (<640px)
+   - `md:` tablet (≥768px)
+   - `lg:` desktop (≥1024px)
+   - `xl:` large desktop (≥1280px)
+
+### Common Layout Patterns
+
+**Section wrapper:**
+```tsx
+<section className="py-16 px-6">
+  <div className="max-w-6xl mx-auto">
+    {/* Content */}
+  </div>
+</section>
+```
+
+**Responsive grid (cards):**
+```tsx
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {/* Grid items */}
+</div>
+```
+
+**Centered content:**
+```tsx
+<div className="max-w-4xl mx-auto text-center">
+  {/* Content */}
+</div>
+```
+
+### CSS Custom Properties
+
+Project uses CSS custom properties for theming in `src/styles/globals.css`:
+
+- **Colors**: `--ui-primary`, `--gray-*`, `--accent-*`
+- **Fonts**: `--font-outfit`, `--font-jetbrains-mono`
+- **Radius**: `--radius`, `--radius-sm`, etc.
+
+**Use utility classes** for these:
+- `text-ui-primary` - for Apple-style blue
+- `bg-ui-primary` - for blue backgrounds
+- `text-gray-600` - for muted text
+- Custom gradients: `gradient-bg`, `gradient-primary`
+
+### The `cn()` Utility
+
+Use the `cn()` helper from `@/lib/utils` for conditional classes:
+
+```typescript
+import { cn } from "@/lib/utils";
+
+className={cn(
+  "base-classes",
+  condition && "conditional-classes",
+  className // Allow prop overrides
+)}
+```
+
+## State Management
+
+### Context Usage
+
+1. **UniformContext** - provided in `_app.tsx` for Uniform integration
+2. **MobileMenuProvider** - custom context for mobile menu state
+
+To create new contexts:
+- Place in `src/contexts/`
+- Export provider and hook
+- Import and wrap in `_app.tsx` if global
+
+### Uniform Hooks
+
+Key hooks from `@uniformdev/canvas-react`:
+- `useUniformContextualEditingState()` - get editor state and selected component
+- Used for auto-expanding accordion items when selected in Canvas editor
+
+## Routing & Pages
+
+### Dynamic Routing Structure
+
+- **Catch-all route**: `src/pages/[[...slug]].tsx` handles all Uniform pages
+- **Special routes**: 
+  - `uniform-playground` - component testing sandbox
+  - API routes in `pages/api/`
+- **404 page**: Custom 404 at `pages/404.tsx`
+
+### Page Template
+
+Pages should import and use `PageComposition` component:
+
+```typescript
+import PageComposition from "@/components/page/page-composition";
+import { withUniformGetServerSideProps } from "@uniformdev/canvas-next/route";
+
+export const getServerSideProps = withUniformGetServerSideProps({
+  // Configuration
+});
+
+export default PageComposition;
+```
+
+### Metadata Handling
+
+Page metadata extracted from Uniform composition parameters in `_app.tsx`:
+- `pageTitle` → HTML `<title>`
+- `pageMetaDescription` → meta description
+- `pageKeywords` → meta keywords
+
+## Form Components
+
+### Form Field Patterns
+
+Form fields in `src/components/form/fields/` follow a consistent pattern:
+
+1. Use Radix UI primitives (`@radix-ui/react-*`)
+2. Support Uniform parameter binding
+3. Include proper labels and accessibility attributes
+4. Type definitions export `*FieldProps` interface
+
+Available field types:
+- Text, Numeric, Dropdown, Checkbox, Radio
+- Date, Time, Color
+- Form submission with FormButton
+
+## Images & Assets
+
+### Image Optimization
+
+The project includes `src/utilities/imageTransform.ts` for multi-CDN support:
+- **Uniform Assets** - native transformation
+- **Cloudinary** - with focal point support
+- **Unsplash** - Imgix transformations
+
+Use the `Image` component which handles optimization automatically.
+
+### Asset Best Practices
+
+1. Use `alt` text for all images (accessibility)
+2. Specify width/height when possible (CLS prevention)
+3. Use Next.js `<Image>` component for optimization
+4. Remote patterns configured for all HTTPS domains
+
+## Development Workflows
+
+### Starting Development
+
+```bash
+npm run dev              # Starts on port 3222
+```
+
+### Uniform Sync Commands
+
+```bash
+npm run uniform:pull     # Pull latest from Uniform
+npm run uniform:push     # Push local changes to Uniform
+```
+
+### Environment Variables
+
+Required in `.env`:
+```
+UNIFORM_API_KEY=uf......
+UNIFORM_PROJECT_ID=........
+UNIFORM_PREVIEW_SECRET=hello-world
+```
+
+## Testing & Quality
+
+### Component Playground
+
+Access at `/uniform-playground` for:
+- Testing components in isolation
+- Viewing responsive behavior
+- Experimenting with variants
+
+### Linting
+
+- ESLint configured with Next.js TypeScript rules
+- Run with `npm run lint`
+- **CRITICAL**: Fix any linter errors before considering work complete
+
+## Internationalization (i18n)
+
+### Locale Configuration
+
+- **92+ locales** configured in `next.config.ts`
+- **Default locale**: `en-US`
+- Uses Next.js built-in i18n routing
+- Uniform compositions can enable specific locales
+
+### Locale Patterns
+
+Major supported locales include:
+- English variants (US, GB, CA, AU, etc.)
+- Spanish variants (ES, MX, AR, CO, etc.)
+- European languages (FR, DE, IT, NL, etc.)
+- Nordic languages (SV, DA, FI, NO, IS)
+- Asian languages (JA, KO, ZH, HI, TH, etc.)
+- Middle Eastern (AR, HE, TR, FA)
+
+## Performance Optimization
+
+### Best Practices
+
+1. **Image optimization** - use Next.js Image component
+2. **Code splitting** - automatic with Next.js dynamic imports
+3. **Font optimization** - Google Fonts loaded via `next/font`
+4. **No unnecessary re-renders** - use React.memo when appropriate
+5. **Lazy loading** - defer non-critical components
+
+### Fonts Configuration
+
+Two fonts configured in `_app.tsx`:
+- **Outfit** (main UI font, weights: 300-800)
+- **JetBrains Mono** (code/monospace font)
+
+Accessible via CSS variables:
+- `font-family: var(--font-outfit)`
+- `font-family: var(--font-jetbrains-mono)`
+
+## Accessibility Standards
+
+### Requirements
+
+1. **Semantic HTML** - use proper elements (`<nav>`, `<section>`, `<article>`)
+2. **ARIA labels** - for interactive elements and icons
+3. **Alt text** - all images must have descriptive alt text
+4. **Keyboard navigation** - all interactive elements accessible via keyboard
+5. **Focus states** - visible focus indicators
+6. **Color contrast** - meet WCAG AA standards
+
+### Example Patterns
+
+```tsx
+// Semantic HTML
+<nav aria-label="Main navigation">
+
+// Button with aria-label
+<button aria-label="Close menu" aria-expanded={isOpen}>
+
+// Image with alt text
+<Image src={src} alt="Descriptive text" />
+```
+
+## Code Style Guidelines
+
+### TypeScript
+
+1. **Use interfaces** for props (export with component)
+2. **Type safety** - avoid `any`, use proper types
+3. **Optional props** - use `?` operator with defaults
+4. **Strict mode** enabled
+
+### React Patterns
+
+1. **Functional components** with TypeScript
+2. **Hooks** over class components
+3. **Props destructuring** in function signature
+4. **Default props** via destructuring defaults
+
+### Naming Conventions
+
+- **Components**: PascalCase (`CardGrid`, `ImageHero`)
+- **Files**: Match component name (`CardGrid.tsx`)
+- **Props interfaces**: `ComponentNameProps`
+- **Hooks**: camelCase with `use` prefix (`useMobileMenu`)
+- **Utilities**: camelCase (`imageTransform.ts`, `utils.ts`)
+- **CSS classes**: kebab-case or Tailwind utilities
+
+## Error Handling
+
+### Common Patterns
+
+1. **Optional chaining** - `composition?.parameters?.title?.value`
+2. **Nullish coalescing** - `value ?? 'fallback'`
+3. **Error boundaries** - implement for production
+4. **Fallback content** - always provide defaults for CMS fields
+
+### Debugging
+
+- Use `console.log` for development debugging
+- Remove console statements before committing (unless critical)
+- Check browser console for Uniform Canvas errors
+- Use React DevTools for component inspection
+
+## Common Gotchas & Solutions
+
+### Uniform Editor Styling
+
+- Editor UI elements isolated with CSS resets in `globals.css`
+- Prevents global transitions from affecting Canvas editor
+- Specific selectors for `[data-uniform-component]` and similar
+
+### Mobile Menu State
+
+- Uses context to share state between Header and menu components
+- Don't manage menu state locally in Header component
+
+### Image Rendering
+
+- Use `next/image` Image component (not HTML `<img>`)
+- Provide width/height or use `fill` with `position: relative` parent
+- Configure remote patterns for external image sources
+
+### Uniform Slots
+
+- Slots must be defined in Uniform component definitions
+- Use `<UniformSlot name="slotName" />` to render
+- Configure allowed components in slot definitions
+
+## Quick Reference Commands
+
+```bash
+# Development
+npm run dev                 # Start dev server (port 3222)
+npm run build               # Production build
+npm run start               # Start production server
+npm run lint                # Run ESLint
+
+# Uniform
+npm run uniform:pull        # Pull from Uniform
+npm run uniform:push        # Push to Uniform
+
+# Package Management
+npm install <package>       # Install dependency
+npm install -D <package>    # Install dev dependency
+npm uninstall <package>     # Remove dependency
+```
+
+## File Templates
+
+### New Component Template
+
+```typescript
+import React from "react";
+import { UniformText, registerUniformComponent } from "@uniformdev/canvas-react";
+import { cn } from "@/lib/utils";
+
+export interface NewComponentProps {
+  className?: string;
+}
+
+/**
+ * NewComponent - Brief description
+ * 
+ * Longer description of component purpose and features.
+ */
+export const NewComponent: React.FC<NewComponentProps> = ({
+  className = "",
+}) => {
+  return (
+    <section className={cn("py-16 px-6", className)}>
+      <div className="max-w-6xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6">
+          <UniformText 
+            parameterId="title" 
+            placeholder="Component title" 
+            as="span"
+          />
+        </h2>
+      </div>
+    </section>
+  );
+};
+
+registerUniformComponent({
+  type: "newComponent",
+  component: NewComponent,
+});
+
+export default NewComponent;
+```
+
+### New Hook Template
+
+```typescript
+import { useState, useEffect } from 'react';
+
+export const useCustomHook = (initialValue: any) => {
+  const [value, setValue] = useState(initialValue);
+
+  useEffect(() => {
+    // Effect logic
+  }, []);
+
+  return { value, setValue };
+};
+```
+
+## Project-Specific Notes
+
+### Component Playground
+
+- Located at `/uniform-playground`
+- Used for testing components outside Uniform Canvas
+- Includes responsive viewport testing
+- Good for rapid prototyping and debugging
+
+### Content Types
+
+Two main content types are defined:
+1. **Article** - blog posts with full metadata
+2. **Author** - author profiles with bio and avatar
+
+Use these for structured content, not for layout components.
+
+### Supabase Integration
+
+Basic Supabase client setup exists in `src/lib/supabase/` for future database integration.
+
+### Uniform Data Directory
+
+`uniform-data/` contains serialized Uniform project state:
+- **NEVER manually edit** YAML files
+- **ALWAYS use** Uniform MCP tools or CLI for changes
+- **DO run** `npm run uniform:pull` after MCP changes
+
+## When to Create vs. Reuse Components
+
+### Create New Component When:
+- Distinct visual design pattern
+- Unique interaction behavior  
+- Different content structure
+- Will be used in multiple contexts
+
+### Reuse Existing Component When:
+- Similar layout with minor variations
+- Can use className prop for customization
+- Content structure is the same
+- Would only differ by styling
+
+### Extend with Variants When:
+- Same component, multiple visual styles
+- Use props to control appearance
+- Example: Section component with hero/content/feature variants
+
+## Summary
+
+This project demonstrates modern web development best practices with a focus on:
+- **Clean code** with comprehensive documentation
+- **Uniform CMS** integration for visual editing
+- **Performance** optimization and accessibility
+- **Developer experience** with TypeScript and modern tooling
+- **Scalability** through modular component architecture
+
+Follow these conventions to maintain consistency and code quality across the project.
