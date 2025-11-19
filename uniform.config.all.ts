@@ -29,9 +29,7 @@ const config: CLIConfiguration = {
         publish: true,
       },
       locale: {},          
-      previewUrl: { 
-        mode: "create",
-      },
+      previewUrl: {},
       previewViewport: {},      
       projectMapDefinition: {},
       projectMapNode: {},
