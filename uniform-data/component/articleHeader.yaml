@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
-$schema: https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
+# yaml-language-server: $schema=https://uniform.app/schemas/json-schema/component-definition/v1.json
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
 id: articleHeader
 name: Article Header
-icon: format-heading
+icon: screen
 parameters:
   - id: title
     name: Title
@@ -11,39 +11,8 @@ parameters:
     localizable: true
   - id: excerpt
     name: Excerpt
-    type: richText
-    guidance: Short summary or introduction to the article
-    typeConfig:
-      elements:
-        builtIn:
-          - h1
-          - h2
-          - h3
-          - h4
-          - h5
-          - h6
-          - unorderedList
-          - orderedList
-          - link
-          - quote
-          - code
-          - table
-          - asset
-          - variable
-      required: false
-      formatting:
-        builtIn:
-          - bold
-          - italic
-          - underline
-          - strikethrough
-          - code
-          - superscript
-          - subscript
-      elementsConfig:
-        asset:
-          allowedTypes:
-            - image
+    type: text
+    guidance: Short summary or introduction to the article (displayed as large text paragraph)
     localizable: true
   - id: category
     name: Category
@@ -51,6 +20,12 @@ parameters:
     guidance: Article category
     typeConfig:
       options:
+        - text: Development
+          value: development
+        - text: Mindfulness
+          value: mindfulness
+        - text: Music
+          value: music
         - text: Technology
           value: technology
         - text: Design
@@ -59,8 +34,6 @@ parameters:
           value: business
         - text: Marketing
           value: marketing
-        - text: Development
-          value: development
         - text: Lifestyle
           value: lifestyle
   - id: publishedDate
@@ -70,7 +43,7 @@ parameters:
   - id: readingTime
     name: Reading Time
     type: text
-    typeConfig: null
+    guidance: Estimated reading time
     localizable: true
   - id: authorName
     name: Author Name
@@ -83,12 +56,11 @@ parameters:
     typeConfig:
       allowedTypes:
         - image
-categoryId: 4c555eac-0c3e-40ac-b297-6bf564bed3ef
 description: Article title, excerpt, category, and metadata display
-previewImageUrl: https://i.imgur.com/yF7TV10.png
 useTeamPermissions: true
 slots: []
 titleParameter: title
+thumbnailParameter: featuredImage
 canBeComposition: false
-created: '2025-09-18T14:29:25.004952+00:00'
-updated: '2025-09-18T15:26:43.736615+00:00'
+created: '2025-12-07T14:32:06.178487+00:00'
+updated: '2025-12-07T14:32:06.178487+00:00'

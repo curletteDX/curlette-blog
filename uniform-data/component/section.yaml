@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
-$schema: https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
+# yaml-language-server: $schema=https://uniform.app/schemas/json-schema/component-definition/v1.json
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
 id: section
 name: Section
-icon: image-text
+icon: screen
 parameters:
   - id: title
     name: Title
@@ -66,9 +66,7 @@ parameters:
         - text: Minimal
           value: minimal
       required: false
-categoryId: f131d88f-05d5-4b45-ac10-22456aebedb2
 description: A flexible section component that can be used as a hero or content section
-previewImageUrl: https://i.imgur.com/J2nfgpy.png
 useTeamPermissions: true
 slots:
   - id: cta
@@ -80,5 +78,5 @@ slots:
     patternsInAllowedComponents: true
 titleParameter: title
 canBeComposition: false
-created: '2025-09-18T11:07:15.904513+00:00'
-updated: '2025-09-18T12:38:09.304247+00:00'
+created: '2025-12-07T14:31:47.438881+00:00'
+updated: '2025-12-07T14:31:47.438881+00:00'

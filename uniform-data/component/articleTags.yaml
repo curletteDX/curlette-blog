@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
-$schema: https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
+# yaml-language-server: $schema=https://uniform.app/schemas/json-schema/component-definition/v1.json
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
 id: articleTags
 name: Article Tags
-icon: tag
+icon: screen
 parameters:
   - id: tags
     name: Tags
@@ -35,11 +35,10 @@ parameters:
     type: text
     guidance: Label text for the tags section
     localizable: true
-categoryId: 4c555eac-0c3e-40ac-b297-6bf564bed3ef
 description: Display article tags in a styled format
-previewImageUrl: https://i.imgur.com/yk3BUd2.png
 useTeamPermissions: true
 slots: []
+titleParameter: tagsLabel
 canBeComposition: false
-created: '2025-09-18T14:29:29.107252+00:00'
-updated: '2025-09-18T15:19:14.399464+00:00'
+created: '2025-12-07T14:32:10.755629+00:00'
+updated: '2025-12-07T14:32:10.755629+00:00'

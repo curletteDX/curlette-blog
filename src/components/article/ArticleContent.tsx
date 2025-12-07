@@ -31,15 +31,15 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`max-w-4xl mx-auto px-4 py-8 ${className}`}>
-      <div className="prose prose-lg max-w-none">
+    <article className={`mx-auto max-w-3xl px-6 ${className}`}>
+      <div className="prose prose-slate max-w-none pb-16">
         <UniformRichText 
           parameterId="content" 
           placeholder="Article content goes here..."
           resolveRichTextRenderer={resolveRichTextRenderer}
         />
       </div>
-    </div>
+    </article>
   );
 };
 

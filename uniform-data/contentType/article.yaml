@@ -1,7 +1,7 @@
 id: article
 name: Article
-created: '2025-09-18T13:13:29.086675+00:00'
-updated: '2025-09-18T15:09:04.977506+00:00'
+created: '2025-12-07T14:30:47.327642+00:00'
+updated: '2025-12-07T14:30:47.327642+00:00'
 slugSettings: {}
 useTeamPermissions: true
 fields:
@@ -12,39 +12,8 @@ fields:
     localizable: true
   - id: excerpt
     name: Excerpt
-    type: richText
-    guidance: Short summary or introduction to the article
-    typeConfig:
-      elements:
-        builtIn:
-          - h1
-          - h2
-          - h3
-          - h4
-          - h5
-          - h6
-          - unorderedList
-          - orderedList
-          - link
-          - quote
-          - code
-          - table
-          - asset
-          - variable
-      required: false
-      formatting:
-        builtIn:
-          - bold
-          - italic
-          - underline
-          - strikethrough
-          - code
-          - superscript
-          - subscript
-      elementsConfig:
-        asset:
-          allowedTypes:
-            - image
+    type: text
+    guidance: Short summary or introduction to the article (displayed as large text paragraph)
     localizable: true
   - id: content
     name: Content
@@ -95,14 +64,22 @@ fields:
     type: contentReference
     guidance: The author of the article
     typeConfig:
+      isMulti: false
       allowedContentTypes:
         - author
+    localizable: false
   - id: category
     name: Category
     type: select
     guidance: Article category or topic
     typeConfig:
       options:
+        - text: Development
+          value: development
+        - text: Mindfulness
+          value: mindfulness
+        - text: Music
+          value: music
         - text: Technology
           value: technology
         - text: Design
@@ -111,8 +88,6 @@ fields:
           value: business
         - text: Marketing
           value: marketing
-        - text: Development
-          value: development
         - text: Lifestyle
           value: lifestyle
     localizable: false
@@ -170,11 +145,8 @@ fields:
     localizable: false
   - id: readingTime
     name: Reading Time
-    type: number
-    guidance: Estimated reading time in minutes
-    typeConfig:
-      max: 60
-      min: 1
+    type: text
+    guidance: Estimated reading time (e.g., "8 min read")
     localizable: false
 entryName: title
 thumbnailField: featuredImage
@@ -182,10 +154,4 @@ description: Blog posts and articles with content and metadata
 icon: file-document
 type: contentType
 permissions: []
-previewConfigurations:
-  - type: project-map
-    id: 39f084ef-83c6-4ed5-8203-cbe347a6dae7
-    label: Article Detail Page
-    dynamicInputs:
-      slug: ${#jptr:/entry/_slug}
-      locale: ${locale}
+previewConfigurations: []

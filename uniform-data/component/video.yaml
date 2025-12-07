@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
-$schema: https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
+# yaml-language-server: $schema=https://uniform.app/schemas/json-schema/component-definition/v1.json
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
 id: video
 name: Video
-icon: play-button-o
+icon: screen
 parameters:
   - id: title
     name: Title
@@ -52,12 +52,10 @@ parameters:
     typeConfig:
       allowedTypes:
         - video
-categoryId: 9e341b38-52b6-4569-b24e-e945488d2ed8
 description: A simple video component with title and description
-previewImageUrl: https://i.imgur.com/8pjItvd.png
 useTeamPermissions: true
 slots: []
 titleParameter: title
 canBeComposition: false
-created: '2025-09-18T13:13:36.717835+00:00'
-updated: '2025-09-18T13:13:36.717835+00:00'
+created: '2025-12-07T14:31:26.14652+00:00'
+updated: '2025-12-07T14:31:26.14652+00:00'

@@ -1,15 +1,12 @@
 import React from "react";
 import {
   UniformText,
-  UniformRichText,
   registerUniformComponent,
 } from "@uniformdev/canvas-react";
 import Image from "next/image";
 import { imageFrom } from "@uniformdev/assets";
 import type { AssetParamValue } from "@uniformdev/assets";
-import { Badge } from "../ui/badge";
-import { Calendar, Clock, User } from "lucide-react";
-import { resolveRichTextRenderer } from "../../lib/richTextRenderers";
+import { Calendar } from "lucide-react";
 
 export interface ArticleHeaderProps {
   className?: string;
@@ -17,39 +14,36 @@ export interface ArticleHeaderProps {
   publishedDate?: string;
   readingTime?: string;
   authorName?: string;
-  byText?: string;
-  minReadText?: string;
   featuredImage?: AssetParamValue;
+  excerpt?: string;
 }
 
 /**
  * ArticleHeader Component
  * 
- * Displays the main header section of an article including title, excerpt,
- * category badge, metadata, and an optional featured image.
- * This component is designed to be the top section of article detail pages.
+ * Displays the main header section of an article matching the new blog design.
+ * Includes category badge, title, metadata, hero image, and excerpt.
  * 
  * Features:
- * - Editable title and excerpt (Uniform fields)
- * - Optional featured image with optimized display
- * - Category badge with color coding
- * - Article metadata display (date, reading time, author)
- * - Editable text labels ("By", "min read")
- * - Clean, professional typography
- * - Responsive design with proper image aspect ratios
+ * - Category badge with secondary styling
+ * - Large, readable title with responsive sizing
+ * - Published date with calendar icon
+ * - Hero image with 1200x630 aspect ratio
+ * - Excerpt/lede as large text paragraph
+ * - Clean, modern typography matching the design system
+ * - Responsive design with proper spacing
  * 
  * Image Features:
- * - 2:1 aspect ratio (1200x600) optimized for article headers
+ * - 1200x630 aspect ratio optimized for article headers
  * - Smart cropping with "cover" fit
  * - Responsive image loading with proper sizes
  * - Fallback placeholder when no image selected
  * - Accessibility with proper alt text extraction
  * 
  * Uniform Integration:
- * - Uses UniformText for the article title and editable labels
- * - Uses UniformRichText for the article excerpt
+ * - Uses UniformText for the article title and excerpt
  * - Uses AssetParamValue for featured image with imageFrom transformations
- * - Supports category, date, reading time, and author parameters
+ * - Supports category, date, reading time parameters
  */
 export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
   className = "",
@@ -58,22 +52,23 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
   readingTime,
   authorName,
   featuredImage,
+  excerpt,
 }) => {
-  const categoryColors: Record<string, string> = {
-    technology: 'bg-blue-100 text-blue-800',
-    design: 'bg-purple-100 text-purple-800',
-    business: 'bg-green-100 text-green-800',
-    marketing: 'bg-orange-100 text-orange-800',
-    development: 'bg-indigo-100 text-indigo-800',
-    lifestyle: 'bg-pink-100 text-pink-800',
-  };
-
   const formatDate = (dateString: string) => {
+    if (!dateString) return '';
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
       day: 'numeric',
     });
+  };
+
+  const formatReadingTime = (time: string | number | undefined) => {
+    if (!time) return '';
+    if (typeof time === 'number') {
+      return `${time} min read`;
+    }
+    return time;
   };
 
   // Process the Uniform featured image asset parameter
@@ -98,73 +93,41 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
                   'Article featured image';
 
   return (
-    <header className={`max-w-4xl mx-auto px-4 py-8 ${className}`}>
+    <header className={`mx-auto max-w-3xl px-6 py-12 md:py-16 space-y-6 ${className}`}>
       {/* Category Badge */}
       {category && (
-        <div className="mb-4">
-          <Badge 
-            variant="secondary" 
-            className={`${categoryColors[category] || 'bg-gray-100 text-gray-800'} capitalize`}
-          >
+        <div className="inline-flex items-center gap-2">
+          <span className="rounded-full bg-secondary px-3 py-1.5 text-xs font-medium uppercase tracking-wider text-secondary-foreground">
             {category}
-          </Badge>
+          </span>
         </div>
       )}
 
       {/* Article Title */}
-      <h1 className="text-4xl font-bold text-gray-900 mb-4 leading-tight">
+      <h1 className="text-4xl font-medium tracking-tight text-balance md:text-5xl lg:text-6xl leading-[1.1]">
         <UniformText 
           parameterId="title" 
           placeholder="Article title goes here" 
         />
       </h1>
 
-      {/* Article Excerpt */}
-      <div className="text-xl text-gray-600 mb-6 leading-relaxed">
-        <UniformRichText 
-          parameterId="excerpt" 
-          placeholder="Article excerpt goes here..."
-          resolveRichTextRenderer={resolveRichTextRenderer}
-        />
-      </div>
-
-      {/* Article Metadata */}
-      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500">
+      {/* Meta Info */}
+      <div className="flex items-center gap-3 text-sm text-muted-foreground">
         {publishedDate && (
-          <div className="flex items-center gap-1">
-            <Calendar className="w-4 h-4" />
-            <span>{formatDate(publishedDate)}</span>
+          <div className="flex items-center gap-1.5">
+            <Calendar className="h-4 w-4" />
+            {formatDate(publishedDate)}
           </div>
         )}
-        
         {readingTime && (
-          <div className="flex items-center gap-1">
-            <Clock className="w-4 h-4" />
-            <span>
-              {readingTime}
-            </span>
-          </div>
-        )}
-
-        {authorName && (
-          <div className="flex items-center gap-1">
-            <User className="w-4 h-4" />
-            <span>
-              <UniformText
-                parameterId="byText"
-                placeholder="By"
-                as="span"
-              />{' '}
-              {authorName}
-            </span>
-          </div>
+          <span>{formatReadingTime(readingTime)}</span>
         )}
       </div>
 
-      {/* Featured Image */}
+      {/* Hero Image */}
       {imageUrl && (
-        <div className="mt-8 mb-0 rounded-lg overflow-hidden">
-          <div className="relative aspect-[2/1] bg-gray-100">
+        <div className="!mt-8 overflow-hidden rounded-lg">
+          <div className="relative w-full aspect-[1200/630] bg-muted">
             <Image
               src={imageUrl}
               alt={imageAlt}
@@ -179,10 +142,10 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
 
       {/* Image Placeholder when no image selected */}
       {!imageUrl && (
-        <div className="mt-8 mb-0 rounded-lg bg-gray-50 border-2 border-dashed border-gray-200">
-          <div className="aspect-[2/1] flex items-center justify-center">
-            <div className="text-center text-gray-400">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-lg flex items-center justify-center">
+        <div className="!mt-8 overflow-hidden rounded-lg bg-muted/30 border border-border/50">
+          <div className="aspect-[1200/630] flex items-center justify-center">
+            <div className="text-center text-muted-foreground">
+              <div className="w-16 h-16 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
                 <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
@@ -190,6 +153,23 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({
               <p className="text-sm">Select featured image in the panel →</p>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Excerpt/Lede */}
+      {excerpt && (
+        <p className="!mt-8 text-xl leading-relaxed text-muted-foreground text-pretty">
+          {excerpt}
+        </p>
+      )}
+      {!excerpt && (
+        <div className="!mt-8">
+          <UniformText
+            parameterId="excerpt"
+            placeholder="Article excerpt goes here..."
+            as="p"
+            className="text-xl leading-relaxed text-muted-foreground text-pretty"
+          />
         </div>
       )}
     </header>

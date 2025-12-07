@@ -1,12 +1,13 @@
-# yaml-language-server: $schema=https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
-$schema: https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
+# yaml-language-server: $schema=https://uniform.app/schemas/json-schema/component-definition/v1.json
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
 id: page
 name: Page
-icon: file-document
+icon: screen
 parameters:
   - id: 3169bf67-8227-40ca-af99-68961f63658c
     name: Page Information
     type: group
+    guidance: Page metadata
     typeConfig:
       collapsed: true
       childrenParams:
@@ -15,11 +16,11 @@ parameters:
     name: Page Title
     type: text
     guidance: The title of the page
-    typeConfig: null
     localizable: true
   - id: 46fdcb16-f39d-47fd-a260-360c2d1780b3
     name: Meta Information
     type: group
+    guidance: SEO metadata
     typeConfig:
       collapsed: true
       childrenParams:
@@ -29,47 +30,26 @@ parameters:
     name: Meta Description
     type: text
     guidance: SEO meta description for search engines
-    typeConfig: null
     localizable: true
   - id: metaKeywords
     name: Meta Keywords
     type: text
     guidance: SEO keywords separated by commas
-    typeConfig: null
     localizable: true
-categoryId: ffaea98e-8af9-4f04-9e5b-d3287f7665d7
 description: Base page component that serves as a composition container
 useTeamPermissions: true
 slots:
   - id: header
     name: Header
     maxComponents: 1
-    minComponents: 0
     allowedComponents:
       - header
     inheritAllowedComponents: false
+    patternsInAllowedComponents: true
   - id: body
     name: Body
     allowedComponents:
       - section
-      - productShowcase
-      - productGrid
-      - featuresSection
-      - newsletterSignup
-      - productDetail
-      - article
-      - articleGrid
-      - relatedArticles
-      - featuredArticle
-      - articleSpotlight
-      - articleTeaser
-      - articleNewsletter
-      - form
-      - $test
-      - $localization
-      - $personalization
-      - focalPointDemo
-      - textContent
       - cardGrid
       - richText
       - card
@@ -77,21 +57,21 @@ slots:
       - image
       - imageFeature
       - imageHero
-      - simpleVideo
+      - video
       - cta
-      - articlePage
       - articleHeader
       - articleContent
       - articleTags
       - articleAuthor
-    allowAllComponents: false
     inheritAllowedComponents: false
-    patternsInAllowedComponents: false
+    patternsInAllowedComponents: true
   - id: footer
     name: Footer
     allowedComponents:
       - footer
     inheritAllowedComponents: false
+    patternsInAllowedComponents: true
+titleParameter: pageTitle
 canBeComposition: true
-created: '2025-09-18T08:58:31.87577+00:00'
-updated: '2025-09-18T14:29:52.376395+00:00'
+created: '2025-12-07T14:32:22.032709+00:00'
+updated: '2025-12-07T14:32:22.032709+00:00'

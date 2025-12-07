@@ -1,8 +1,8 @@
-# yaml-language-server: $schema=https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
-$schema: https://eu.uniform.app/schemas/json-schema/component-definition/v1.json
+# yaml-language-server: $schema=https://uniform.app/schemas/json-schema/component-definition/v1.json
+$schema: https://uniform.app/schemas/json-schema/component-definition/v1.json
 id: imageHero
 name: Image Hero
-icon: card
+icon: screen
 parameters:
   - id: title
     name: Title
@@ -49,9 +49,10 @@ parameters:
     name: Background Image
     type: asset
     guidance: Background image for the hero
-categoryId: 9e341b38-52b6-4569-b24e-e945488d2ed8
+    typeConfig:
+      allowedTypes:
+        - image
 description: A hero section with background image
-previewImageUrl: https://i.imgur.com/OThrG4A.jpeg
 useTeamPermissions: true
 slots:
   - id: cta
@@ -61,6 +62,7 @@ slots:
     inheritAllowedComponents: false
     patternsInAllowedComponents: true
 titleParameter: title
+thumbnailParameter: backgroundImage
 canBeComposition: false
-created: '2025-09-18T10:07:23.811017+00:00'
-updated: '2025-09-18T12:33:04.266195+00:00'
+created: '2025-12-07T14:31:55.943903+00:00'
+updated: '2025-12-07T14:31:55.943903+00:00'

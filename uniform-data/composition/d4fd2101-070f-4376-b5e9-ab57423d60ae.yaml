@@ -37,7 +37,7 @@ composition:
                 locales:
                   en-US: ${#jptr:/Article by Slug Content/entry/fields/title/value}
               excerpt:
-                type: richText
+                type: text
                 locales:
                   en-US: ${#jptr:/Article by Slug Content/entry/fields/excerpt/value}
               category:
@@ -50,9 +50,7 @@ composition:
                   Content/entry/fields/author/value/entry/fields/name/value}
               readingTime:
                 type: text
-                value: >-
-                  ${#jptr:/Article by Slug
-                  Content/entry/fields/readingTime/value} min read
+                value: ${#jptr:/Article by Slug Content/entry/fields/readingTime/value}
               featuredImage:
                 type: asset
                 value: >-

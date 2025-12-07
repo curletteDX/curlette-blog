@@ -7,36 +7,57 @@ const config: CLIConfiguration = {
     directory: "./uniform-data",
     entitiesConfig: {
       aggregate: {},
-      asset: {},
-      category: {},
+      asset: {
+        mode: "create",
+      },
+      category: {
+        mode: "create",
+      },
       component: {},
       componentPattern: {
         publish: true,
+        mode: "create",
       },
       composition: {
         publish: true,
+        mode: "create",
       },
       compositionPattern: {
         publish: true,
+        mode: "create",
       },
       contentType: {},
-      dataType: {},
+      dataType: {
+        mode: "create",
+      },
       enrichment: {},
       entry: {
         publish: true,
+        mode: "create",
       },
       entryPattern: {
         publish: true,
+        mode: "create",
       },
-      locale: {},          
+      locale: {
+        mode: "create",
+      },          
       previewUrl: { 
         mode: "create",
       },
-      previewViewport: {},      
-      projectMapDefinition: {},
-      projectMapNode: {},
+      previewViewport: {
+        mode: "create",
+      },      
+      projectMapDefinition: {
+        mode: "create",
+      },
+      projectMapNode: {
+        mode: "create",
+      },
       prompt: {},
-      quirk: {},
+      quirk: {
+        mode: "create",
+      },
       redirect: {},
       signal: {},
       test: {},
